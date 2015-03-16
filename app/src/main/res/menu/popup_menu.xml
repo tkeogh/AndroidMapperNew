@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <item
+        android:id="@+id/two"
+        android:title="Upload"/>
+    <item
+        android:id="@+id/three"
+        android:title="Cancel"/>
+    <item
+        android:id="@+id/tom"
+        android:title="Add Info"/>
+
+</menu>
