@@ -168,23 +168,23 @@ public class RouteFinder extends Activity {
 
                 // Make sure the request was successful
                 Bundle extras = data.getExtras();
-                String from = extras.getString("from");
-                String end = extras.getString("to");
-                if (from.equalsIgnoreCase(end)) {
+                start = extras.getString("from");
+                 end = extras.getString("to");
+                if (start.equalsIgnoreCase(end)) {
                     Toast toast4 = Toast.makeText(getApplicationContext(), "Your destination and start are the same", Toast.LENGTH_SHORT);
                     toast4.show();
                     return;
                 }
                 routeFound = false;
-                plotRoute(from, end);
+                plotRoute(start, end);
 
             }
         }
     }
 
     public void plotRoute(String from, String to) {
-        start = from;
-        end = to;
+        String here = from;
+        String dest = to;
         ArrayList<String> endings = new ArrayList<String>();
 
         int tripped = 0;
@@ -193,8 +193,8 @@ public class RouteFinder extends Activity {
         for (int i = 0; i < reading.size(); i++) {
             String destination = reading.get(i).getTo();
             endings.add(destination);
-            //Log.i("Added this to endings: ", destination);
-            if (destination.equals(end)) {
+            Log.i("Added this to endings: ", destination);
+            if (destination.equals(dest)) {
 
                 setRoute(reading.get(i), map);
                 tripped = 1;
@@ -213,42 +213,69 @@ public class RouteFinder extends Activity {
 
     public void findPath(ArrayList<String> endings, ArrayList<Route> reading) {
         boolean missingroute = true;
-         String last = start;
+        String last = start;
 
 
         Log.i("going from", start);
         Log.i("going to", end);
 
         ArrayList<String> visited = new ArrayList<String>();
-        ArrayList<Node> order = new ArrayList<Node>();
+        ArrayList<Route> processed = new ArrayList<Route>();
+
+
         visited.add(start);
 
 
         while (missingroute) {
-            Log.i("back in while", "");
+
             ArrayList<Route> possRoutes = new ArrayList<Route>(); //ArrayList.clear() breaks everything.
             ArrayList<String> nextfiles = new ArrayList<String>();
-            Log.i("endings in loop now", Integer.toString(endings.size()));
 
             for (int i = 0; i < endings.size(); i++) {
 
 
+                if (visited.contains(endings.get(i))) {
+
+                } else {
+                    visited.add(endings.get(i));
+                    Log.i("Added to visited : ",endings.get(i));
+                    Log.i("test ",Integer.toString(endings.size()));
 
 
-                possRoutes = reading(endings.get(i) + ".txt");
-                visited.add(endings.get(i));
-                for (int j = 0; j < possRoutes.size(); j++) {
-                    Route curr = possRoutes.get(j);
+                    possRoutes = reading(endings.get(i) + ".txt");
+                    //visited.add(endings.get(i));
+                    for (int j = 0; j < possRoutes.size(); j++) {
+                        Route curr = possRoutes.get(j);
 
-                    if (!visited.contains(curr.getTo())) {
-                        nextfiles.add(curr.getTo());
-                        Log.i("Added to nextfiles:", curr.getTo());
-                    }
+                        if (processed.contains(curr)) {
+
+                        } else {
+                            processed.add(curr);
+                            Log.i("added route ",curr.getFrom() + " " +curr.getTo());
+                        }
+
+                        if (!nextfiles.contains(curr.getTo())&&!visited.contains(curr.getTo())) {
+                            nextfiles.add(curr.getTo());
+                            Log.i("added to next files: ", curr.getTo());
+
+                        }
 
 
-                    if (end.equalsIgnoreCase(curr.getTo())) {
-                        Log.i("found route", curr.getFrom() + " " + curr.getTo());
-                        missingroute = false;
+                        Log.i("getting pst logic","");
+
+
+                        if (end.equalsIgnoreCase(curr.getTo())) {
+                            Log.i("found route", curr.getFrom() + " " + curr.getTo());
+
+                            missingroute = false;
+                            plotPath(processed);
+                            return;
+
+
+                        }
+                        if (!missingroute) {
+                            return;
+                        }
                     }
                     if (!missingroute) {
                         return;
@@ -257,11 +284,29 @@ public class RouteFinder extends Activity {
                 if (!missingroute) {
                     return;
                 }
+
+
+
             }
             endings = nextfiles;
-            Log.i("endings now", Integer.toString(endings.size()));
+            if (!missingroute) {
+                return;
+            }
+        }
+
+
+
+    }
+
+    public void plotPath(ArrayList<Route> routes) {
+
+        Log.i("hit plot path", "sfd");
+
+        for (int i = 0; i < routes.size(); i++) {
+            Log.i("frmo " + routes.get(i).getFrom(), " to " + routes.get(i).getTo());
         }
     }
+
 }
 
 
