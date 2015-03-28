@@ -47,6 +47,11 @@ public class route_choice extends Activity {
                                     choices.putExtra("from","Edward");
 
                                 }
+                                if(item.getTitle().equals("Cwrt Mawr")) {
+
+                                    choices.putExtra("from","Mawr");
+
+                                }
                                 if(item.getTitle().equals("Business Building")) {
 
                                     choices.putExtra("from","Business");
@@ -111,6 +116,11 @@ public class route_choice extends Activity {
                                 if(item.getTitle().equals("Students Union")) {
 
                                     choices.putExtra("to","Union");
+
+                                }
+                                if(item.getTitle().equals("Cwrt Mawr")) {
+
+                                    choices.putExtra("to","Mawr");
 
                                 }
                                 if(item.getTitle().equals("Hugh Owen")) {
