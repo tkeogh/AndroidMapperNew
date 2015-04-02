@@ -57,7 +57,7 @@ public class RouteFinder extends Activity {
                     @Override
                     public void onClick(View aView) {
 
-                        Intent movepoi = new Intent(aView.getContext(), route_choice.class);
+                        Intent movepoi = new Intent(aView.getContext(), route_choosing.class);
                         startActivityForResult(movepoi, 1); //1 here is the request code used in onresult
 
                     }
@@ -87,8 +87,9 @@ public class RouteFinder extends Activity {
                 pointof next = points.get(i + 1);
                 LatLng nex = new LatLng(next.getLat(), next.getLng());
 
+
                 map.addPolyline(new PolylineOptions().add(Current, nex)
-                        .width(8).color(Color.RED));
+                        .width(8).color(Color.parseColor(here.getDifficulty())));
 
             }
 
@@ -122,6 +123,9 @@ public class RouteFinder extends Activity {
                     Route route = new Route(start, end);
 
                     //Log.i("destination : ",end);
+                    String rating = reader.readLine();
+                    route.setDifficulty(rating);
+
 
                     int amount = Integer.parseInt(reader.readLine());
 
@@ -161,23 +165,30 @@ public class RouteFinder extends Activity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == 1) {
-            if (data.getExtras() != null) {
+        Log.i("requiest code is " + Integer.toString(requestCode), " result is " + resultCode);
+        if (requestCode == 1) {//requestCode was set when starting the other activity. In this case 1 was route finding.
+            if (resultCode == RESULT_OK) {//Equates to -1
+                if (data.getExtras() != null) {
 
-                map.clear();
+                    map.clear();
 
 
-                // Make sure the request was successful
-                Bundle extras = data.getExtras();
-                start = extras.getString("from");
-                end = extras.getString("to");
-                if (start.equalsIgnoreCase(end)) {
-                    Toast toast4 = Toast.makeText(getApplicationContext(), "Your destination and start are the same", Toast.LENGTH_SHORT);
-                    toast4.show();
-                    return;
+                    // Make sure the request was successful
+                    Bundle extras = data.getExtras();
+                    start = extras.getString("from");
+                    end = extras.getString("to");
+                    if (start.equalsIgnoreCase(end)) {
+                        Toast toast4 = Toast.makeText(getApplicationContext(), "Your destination and start are the same", Toast.LENGTH_SHORT);
+                        toast4.show();
+                        return;
+                    }
+                    routeFound = false;
+                    plotRoute(start, end); //Start plotting the route requested
+
                 }
-                routeFound = false;
-                plotRoute(start, end);
+            }
+            if (resultCode == RESULT_CANCELED ){//Equates to 0
+                //Stops the app crashing if the user just wants to go back a screen.
 
             }
         }
@@ -188,16 +199,16 @@ public class RouteFinder extends Activity {
         String dest = to;
         ArrayList<String> endings = new ArrayList<String>();
 
-        int tripped = 0;
-        ArrayList<Route> reading = reading(from + ".txt");
+        int tripped = 0; //Keep track of if the routes found
+        ArrayList<Route> reading = reading(from + ".txt"); //Reads in routes from a text file, all follow naming convention
 
         for (int i = 0; i < reading.size(); i++) {
             String destination = reading.get(i).getTo();
-            endings.add(destination);
+            endings.add(destination);//Add all possible endings from this point for possible later use.
             Log.i("Added this to endings: ", destination);
-            if (destination.equals(dest)) {
+            if (destination.equals(dest)) { //found a route in first file.
 
-                setRoute(reading.get(i), map);
+                setRoute(reading.get(i), map);//Pass in  a route and the map object
                 tripped = 1;
             }
 
@@ -205,17 +216,15 @@ public class RouteFinder extends Activity {
 
         if (tripped == 0) {
 
-            findPath(endings, reading);
+            findPath(endings);//Route isnt in the first file, find a path.
 
 
         }
     }
 
 
-    public void findPath(ArrayList<String> endings, ArrayList<Route> reading) {
+    public void findPath(ArrayList<String> endings) {
         boolean missingroute = true;
-        String last = start;
-
 
         Log.i("going from", start);
         Log.i("going to", end);
@@ -237,7 +246,7 @@ public class RouteFinder extends Activity {
 
 
                 if (visited.contains(endings.get(i))) {
-
+                    //If we've already scanned this file we dont need to check it again.
                 } else {
                     visited.add(endings.get(i));
                     //Node n = new Node(last,endings.get(i));
@@ -259,7 +268,7 @@ public class RouteFinder extends Activity {
 
                         if (!nextfiles.contains(curr.getTo()) && !visited.contains(curr.getTo())) {
                             Node b = new Node(curr.getFrom(), curr.getTo());
-                            fileInfo.add(b);
+                            fileInfo.add(b);//Logging which file is opened from where, track back.
                             nextfiles.add(curr.getTo());
                             Log.i("added to next files: ", curr.getTo());
 
@@ -269,7 +278,7 @@ public class RouteFinder extends Activity {
                         Log.i("getting pst logic", "");
 
 
-                        if (end.equalsIgnoreCase(curr.getTo())) {
+                        if (end.equalsIgnoreCase(curr.getTo())) { //weve found the last file
                             Log.i("found route", curr.getFrom() + " " + curr.getTo());
 
                             missingroute = false;

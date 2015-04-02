@@ -20,10 +20,6 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <instrumentation
-        android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.example.walkingtour" />
-
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -67,7 +63,7 @@
 
         <activity
             android:name=".Grid"
-            android:label="@string/title_activity_grid" >
+            android:label="Menu" >
         </activity>
         <activity
             android:name=".Help"
@@ -75,11 +71,15 @@
         </activity>
         <activity
             android:name=".RouteFinder"
-            android:label="@string/title_activity_route_finder" >
+            android:label="Campus Map" >
         </activity>
         <activity
             android:name=".route_choice"
-            android:label="@string/title_activity_route_choice" >
+            android:label="Choose your Route" >
+        </activity>
+        <activity
+            android:name=".route_choosing"
+            android:label="@string/title_activity_route_choosing" >
         </activity>
     </application>
 

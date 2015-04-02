@@ -41,8 +41,9 @@ public class MainActivity extends Activity {
                         @Override
 						public void onClick(View aView)
                         {
-                               Intent toAnotherActivity = new Intent(aView.getContext(), Grid.class);
-                               startActivityForResult(toAnotherActivity, 0); //move to another activity
+                            Intent toAnotherActivity = new Intent(aView.getContext(),
+                                    Grid.class);
+                            startActivity(toAnotherActivity);//move to another activity
                         }
         		}
         		);      

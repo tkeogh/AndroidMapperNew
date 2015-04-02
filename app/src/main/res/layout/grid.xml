@@ -22,7 +22,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignRight="@id/fakeView"
         android:text="Buildings"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        />
 
     <Button
         android:id="@+id/route"

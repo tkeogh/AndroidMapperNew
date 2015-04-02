@@ -6,6 +6,10 @@ public class Route {
 	
 	private String from;
 	private String to;
+
+
+
+    private String difficulty;
 	private ArrayList<pointof> points;
 	
 	public ArrayList<pointof> getPoints() {
@@ -47,5 +51,12 @@ public class Route {
 	public void setTo(String to) {
 		this.to = to;
 	}
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
 
 }
