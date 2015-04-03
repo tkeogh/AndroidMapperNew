@@ -4,7 +4,7 @@
     android:id="@+id/Frame"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#B33DD1"
+    android:background="#E2A9F3"
     tools:context="com.example.walkingtour.Grid" >
 
     <View
@@ -22,7 +22,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignRight="@id/fakeView"
         android:text="Buildings"
-        android:textColor="@color/white"
+        style="@style/button_seagull"
         />
 
     <Button
@@ -34,7 +34,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="Plotter"
-        android:textColor="@color/white" />
+        style="@style/button_seagull" />
 
     <View
         android:id="@+id/fakeView2"
@@ -52,7 +52,7 @@
         android:layout_alignRight="@id/fakeView2"
         android:layout_below="@+id/fakeView2"
         android:text="Route \n Finder"
-        android:textColor="@color/white" />
+        style="@style/button_seagull" />
 
     <Button
         android:id="@+id/help"
@@ -63,6 +63,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/fakeView2"
         android:text="Get \n Help"
-        android:textColor="@color/white" />
+        style="@style/button_seagull" />
 
 </RelativeLayout>

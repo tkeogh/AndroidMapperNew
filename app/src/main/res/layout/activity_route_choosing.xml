@@ -1,10 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     tools:context="com.example.walkingtour.route_choosing"
     android:orientation="vertical"
-    android:gravity="center">>
+    android:gravity="center"
+    android:background="#E2A9F3">
 
     <ExpandableListView
         android:id="@+id/lvExp"
@@ -12,17 +13,42 @@
         android:layout_width="match_parent"
         />
 
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="17dp"
+        android:textStyle="bold"
+
+        />
+
+    <TextView
+        android:id="@+id/end"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="17dp"
+        android:textStyle="bold"
+
+        />
+
+
     <Button
+        style="@style/button_seagull"
         android:id="@+id/back2"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:gravity="center"
-        android:text="Done"
-        android:textColor="@color/white"
+        android:text="Go!"
+
         android:fadingEdge="horizontal"
+
         />
+
+
 
 
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class route_choosing extends Activity {
@@ -29,9 +30,13 @@ public class route_choosing extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_choosing);
 
+
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
         Button back = (Button)findViewById(R.id.back2);
+       final  TextView start = (TextView)findViewById(R.id.start);
+        final TextView end = (TextView)findViewById(R.id.end);
+
 
         // preparing list data
         prepareListData();
@@ -54,6 +59,7 @@ public class route_choosing extends Activity {
                     from = split[0];
 
                         choices.putExtra("from",from);
+                        start.setText("From : "+from);
                         Log.i("added from", from);
                 }
                 if(listDataHeader.get(groupPosition).equalsIgnoreCase("To")){
@@ -64,6 +70,8 @@ public class route_choosing extends Activity {
 
 
                         choices.putExtra("to",to);
+                        end.setText("To : "+to);
+
                         Log.i("added to",to);
 
 
@@ -84,8 +92,24 @@ public class route_choosing extends Activity {
 
                     {
 
-                        setResult(RESULT_OK,choices); //finish and move back to starting activity
-                        finish();
+                        String result = "failed";
+
+                     if( choices.getStringExtra("from") != null){
+                         if(choices.getStringExtra("to")!= null){
+
+                             setResult(RESULT_OK,choices); //finish and move back to starting activity
+                             finish();
+                             result = "passed";
+
+                         }
+
+                    }
+                        if(result.equalsIgnoreCase("failed")) {
+                            Toast.makeText(getApplicationContext(), "You must Choose a To and From", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
                     }
 
 
@@ -98,18 +122,19 @@ public class route_choosing extends Activity {
 
 
     /*
-     * Preparing the list data
+     * Preparing the list data, sets headers and adds the children.
+     *
      */
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
-        // Adding child data
+        // Adding header titles
         listDataHeader.add("From");
         listDataHeader.add("To");
 
 
-        // Adding child data
+        // Adding child data from reading a file
         List<String> locations = getData();
 
 
@@ -118,6 +143,12 @@ public class route_choosing extends Activity {
         listDataChild.put(listDataHeader.get(1), locations);
 
     }
+
+    /**
+     * Used to load in file locations, means users just need to add one line into a text file to change the menus
+     * They also need to add the places text file but thats not too hard.
+     * @return - ArrayList of the locations.
+     */
 
     private ArrayList<String> getData(){
 
@@ -132,7 +163,6 @@ public class route_choosing extends Activity {
             String mLine = reader.readLine();
             while (mLine != null) {
                 places.add(mLine);
-                Log.i("Loade in:"," "+mLine);
                 mLine = reader.readLine();
 
 

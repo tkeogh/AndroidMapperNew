@@ -22,7 +22,7 @@
         android:layout_marginBottom="25dp"
 
         android:text="@string/options"
-        android:textColor="@color/white" />
+        style="@style/button_seagull" />
 
     <Button
         android:id="@+id/see"
@@ -33,6 +33,6 @@
         android:layout_marginBottom="25dp"
 
         android:text="@string/choice"
-        android:textColor="@color/white" />
+        style="@style/button_seagull" />
 
 </RelativeLayout>
