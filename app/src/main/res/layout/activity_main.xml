@@ -8,7 +8,7 @@
     android:paddingRight="50dp"
     android:paddingTop="50dp"
     tools:context=".MainActivity"
-    android:background="#E2A9F3">
+    android:background="#ffffff">
 
     <Button
         style="@style/button_seagull"
@@ -26,6 +26,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/swap1"
-        android:src="@drawable/work" /> <!-- this is the drawable source of your imageView -->
+        android:src="@drawable/work"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="84dp"
+        android:layout_alignParentTop="true" /> <!-- this is the drawable source of your imageView -->
 
 </RelativeLayout>

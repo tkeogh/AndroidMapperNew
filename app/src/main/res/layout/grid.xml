@@ -4,13 +4,17 @@
     android:id="@+id/Frame"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#E2A9F3"
+    android:background="#3f67cdff"
+    android:paddingBottom="4dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp"
     tools:context="com.example.walkingtour.Grid" >
 
     <View
         android:id="@+id/fakeView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_centerInParent="true" />
 
     <Button
@@ -19,27 +23,32 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/fakeView2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@id/fakeView"
+
         android:text="Buildings"
         style="@style/button_seagull"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/fakeView"
+        android:layout_toStartOf="@+id/fakeView" />
+
 
     <Button
         android:id="@+id/route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/fakeView2"
-        android:layout_alignLeft="@id/fakeView"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+
+
         android:text="Plotter"
-        style="@style/button_seagull" />
+        style="@style/button_seagull"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/fakeView"
+        android:layout_toEndOf="@+id/fakeView" />
 
     <View
         android:id="@+id/fakeView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_below="@+id/fakeView"
         android:layout_centerInParent="true" />
 
@@ -49,20 +58,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignRight="@id/fakeView2"
-        android:layout_below="@+id/fakeView2"
         android:text="Route \n Finder"
-        style="@style/button_seagull" />
+        style="@style/button_seagull"
+        android:layout_below="@+id/fakeView2"
+        android:layout_alignRight="@+id/facil"
+        android:layout_alignEnd="@+id/facil" />
 
     <Button
         android:id="@+id/help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/fakeView2"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/fakeView2"
         android:text="Get \n Help"
-        style="@style/button_seagull" />
+        style="@style/button_seagull"
+        android:layout_below="@+id/fakeView2"
+        android:layout_toRightOf="@+id/fakeView2"
+        android:layout_toEndOf="@+id/fakeView2" />
 
 </RelativeLayout>

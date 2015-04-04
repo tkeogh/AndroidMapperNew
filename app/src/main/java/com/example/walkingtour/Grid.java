@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,21 @@ public class Grid extends Activity {
 		help = (Button) findViewById(R.id.help);
 		
 		finder = (Button) findViewById(R.id.find);
+
+        facilities.setText(Html.fromHtml("<b><big>" + "Facilities" + "</big></b>" + "<br /><br />" +
+                "<small>" + "Map of Buildings on Campus" + "</small>" + "<br />"));
+
+
+        routing.setText(Html.fromHtml("<b><big>" + "Route Plotter" + "</big></b>" + "<br /><br />" +
+                "<small>" + "Plot new routes and upload them" + "</small>" + "<br />"));
+
+        help.setText(Html.fromHtml("<b><big>" + "Find Help" + "</big></b>" + "<br /><br />" +
+                "<small>" + "Find the closest person who can help you" + "</small>" + "<br />"));
+
+        finder.setText(Html.fromHtml("<b><big>" + "Route Finder" + "</big></b>" + "<br /><br />" +
+                "<small>" + "Find your way around Campus" + "</small>" + "<br />"));
+
+
 
 		facilities.setOnClickListener(
 

@@ -5,7 +5,7 @@
     tools:context="com.example.walkingtour.route_choosing"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="#E2A9F3">
+    android:background="#3f67cdff">
 
     <ExpandableListView
         android:id="@+id/lvExp"
