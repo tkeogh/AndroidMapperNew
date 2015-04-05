@@ -10,13 +10,13 @@ public class Route {
 
 
     private String difficulty;
-	private ArrayList<pointof> points;
+	private ArrayList<locations> points;
 	
-	public ArrayList<pointof> getPoints() {
+	public ArrayList<locations> getPoints() {
 		return points;
 	}
 
-	public void setPoints(ArrayList<pointof> points) {
+	public void setPoints(ArrayList<locations> points) {
 		this.points = points;
 	}
 
@@ -28,10 +28,10 @@ public class Route {
 	public Route(String from,String to){
 		this.setFrom(from);
 		this.setTo(to);
-		points = new ArrayList<pointof>();
+		points = new ArrayList<locations>();
 	}
 	
-	private void add(pointof p){
+	private void add(locations p){
 		
 		points.add(p);
 	}

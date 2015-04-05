@@ -9,8 +9,12 @@ public class locations {
 	private String type;
 	private double lat;
 	private double lon;
+
+
+
+    private double dist;
 	
-	
+	/** Constructor for displaying them in the view buildings activity*/
 	
 	public locations(String string, String string2,String type, double i, double j) {
 		
@@ -21,6 +25,17 @@ public class locations {
 		this.lon = j;
 	
 	}
+    /** Constructor for the Help activity*/
+    public locations(String string, double dist){
+        this.name = string;
+        this.dist = dist;
+    }
+
+    /** Constructor for route finding just lat lon*/
+    public locations(double lat, double lon){
+        this.lat =lat;
+        this.lon =lon;
+    }
 
 
 
@@ -139,6 +154,14 @@ public class locations {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
+
+    public double getDist() {
+        return dist;
+    }
+
+    public void setDist(double dist) {
+        this.dist = dist;
+    }
 	
 	
 	

@@ -16,7 +16,7 @@ public class Help extends Activity {
 
 	private static double EARTH_CIRC_METERS = 40030218;
 	
-	ArrayList<pointof> distances = new ArrayList<pointof>();
+	ArrayList<locations> distances = new ArrayList<locations>();
 	
 	String help;
 
@@ -37,17 +37,17 @@ public class Help extends Activity {
 		double lat = location.getLatitude();
 		double lon = location.getLongitude();
 
-		
-		pointof PS = new pointof("Physical Sciences",distanceTo(lat, lon, 52.4159519,-4.0654581));
+
+        locations PS = new locations("Physical Sciences",distanceTo(lat, lon, 52.4159519,-4.0654581));
 		distances.add(PS);
-		
-		pointof HO = new pointof("Hugh Owen",distanceTo(lat, lon, 52.4157893,-4.063691));
+
+        locations HO = new locations("Hugh Owen",distanceTo(lat, lon, 52.4157893,-4.063691));
 		distances.add(HO);
-		
-		pointof TP = new pointof("Thomas Parry",distanceTo(lat, lon, 52.4096535,-4.0521135));
+
+        locations TP = new locations("Thomas Parry",distanceTo(lat, lon, 52.4096535,-4.0521135));
 		distances.add(TP);
-		
-		pointof shortest = sortDist(distances);
+
+        locations shortest = sortDist(distances);
 		
 		if (shortest.getName().equals("Physical Sciences")){
 			
@@ -81,10 +81,10 @@ public class Help extends Activity {
 
 	}
 
-	private pointof sortDist(ArrayList<pointof> newdist) {
+	private locations sortDist(ArrayList<locations> newdist) {
 		int index = 0;
-		
-		pointof small = newdist.get(0);
+
+        locations small = newdist.get(0);
 		
 		for (int i =0;i<newdist.size();i++){
 			

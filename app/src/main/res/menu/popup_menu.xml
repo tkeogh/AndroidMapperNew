@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/two"
-        android:title="Upload"/>
+        android:title="Log Point"/>
     <item
         android:id="@+id/three"
         android:title="Cancel"/>
     <item
         android:id="@+id/tom"
-        android:title="Add Info"/>
+        android:title="Create Route"/>
 
 </menu>

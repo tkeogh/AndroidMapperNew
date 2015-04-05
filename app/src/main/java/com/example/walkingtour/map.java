@@ -2,6 +2,9 @@ package com.example.walkingtour;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.*;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,6 +43,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 
 /**
@@ -67,12 +72,12 @@ public class map extends Activity implements LocationListener {
     private Location location; //current user location
     private GoogleMap map; //map to use
 
-    String walkname;
-    String shortdes; //variables from previous screen
-    String longdes;
+    String start;
+    String end; //variables from previous screen
+
     String desire;
 
-    ArrayList<pointof> markers = new ArrayList<pointof>(); //array list for all POI
+    ArrayList<locations> points = new ArrayList<locations>(); //array list for all POI
 
     /**
      * Sets map and gets current user location. Then sets the methods for the buttons.
@@ -93,14 +98,13 @@ public class map extends Activity implements LocationListener {
         LatLng aber = new LatLng(52.4140, -4.0810); //aberystwyth co ordinates
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(aber, 13));
         map.setMyLocationEnabled(true); //Show users current location, blue dot on map.
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); //GET USER LOCATION HERE.
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); //GET USER LOCATION HERE.
 
         Intent intent = getIntent(); // can now reference last screen
 
-        walkname = intent.getStringExtra("walkn");
-        shortdes = intent.getStringExtra("sdesc"); //add in the information from previous screen using name/value pairs
-        longdes = intent.getStringExtra("ldesc");
+        start = intent.getStringExtra("start");
+        end = intent.getStringExtra("end"); //add in the information from previous screen using name/value pairs
 
         desire = intent.getStringExtra("want");
 
@@ -243,19 +247,26 @@ public class map extends Activity implements LocationListener {
                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 public boolean onMenuItemClick(MenuItem item) {
 
-                                    if (item.getTitle().equals("Add Info")) {
+                                    if (item.getTitle().equals("Log Point")) {
 
-                                        Intent movepoi = new Intent(aView.getContext(), point.class);
-                                        startActivityForResult(movepoi, POI_CHANGE);
+                                        location =locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                        locations point = new locations(location.getLatitude(),location.getLongitude());
+                                        points.add(point);
+                                        if(points.size() > 1){
+                                            paintRoute(points.get(points.size()-2),point);
+                                        }
+
 
                                     }
 
                                     if (item.getTitle().equals("Cancel")) {
                                         showDialog();
                                     }
-                                    if (item.getTitle().equals("Upload")) {
+                                    if (item.getTitle().equals("Create Route")) {
 
-                                        new Upload().execute();
+                                        createFile(points);
+
+
                                     }
 
                                     return true;
@@ -273,70 +284,12 @@ public class map extends Activity implements LocationListener {
     }
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }                                                          //Unused as such, could be used for telling user about network issues.
-
-    @Override
-    public void onProviderEnabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-        // TODO Auto-generated method stub
-
-    }
 
     /**
      * On the return to screen from adding a poi runs the code inside the method. Adds poi to map and data storage.
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == POI_CHANGE) {
-            // Make sure the request was successful
-            Bundle extras = data.getExtras();
-            if (extras != null) { //if we have extras
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); //get new location
 
-                pointof add = new pointof(); //new pointof to be used to store
-
-                String name = extras.getString("mname");
-                String description = extras.getString("mdesc");
-                double lat = location.getLatitude();    //get data needed from extras and locaion manager
-                double lng = location.getLongitude();
-                LatLng pos = new LatLng(lat, lng); //create new latlng object for use
-
-                Marker j = map.addMarker(new MarkerOptions()
-                        .position(pos)    //add a marker to map using passed in data
-                        .title(name)
-                        .snippet(description));
-
-                if (extras.getString("photopath") != null) {  //IF AN IMAGE HAS BEEN CHOSEN
-                    String path = extras.getString("photopath");
-                    Bitmap bmp = BitmapFactory.decodeFile(path);
-                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 120, 120, true); //turn it into a scaled bitmap
-                    j.setIcon(BitmapDescriptorFactory.fromBitmap(scaled));  //set it as icon and add it to the data structure.
-                    add.setImg(scaled);
-                }
-
-
-                add.setDescription(description);
-                add.setName(name);
-                add.setLat(lat);
-                add.setLng(lng);  //add all data to object to be put in data structure and add to data structure.
-                markers.add(add);
-            }
-        }
     }
 
     /**
@@ -350,7 +303,7 @@ public class map extends Activity implements LocationListener {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         map.clear();    //clear walk
-                        markers.clear(); //clear data structure
+                        points.clear(); //clear data structure
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -365,60 +318,71 @@ public class map extends Activity implements LocationListener {
                 .setNegativeButton("No", dialogClickListener).show();  //setting variables within the dialog
     }
 
-    class Upload extends AsyncTask<String, String, String> {
+    /** All of these have to be implemented : / */
 
-        @Override
-        protected String doInBackground(String... arg0) {
-            // TODO Auto-generated method stub
-            //List <NameValuePair> params = new ArrayList<NameValuePair>();
-            JSONObject params = new JSONObject();
-            JSONObject des = new JSONObject();   //4 new JSON objects
-            JSONObject poi = new JSONObject();
-            JSONObject img = new JSONObject();
+    @Override
+    public void onLocationChanged(Location location) {
 
-            try {
+    }
 
-                params.put/*(new BasicNameValuePair*/("walkname", walkname);
-                params.put("shortdes", shortdes);
-                params.put("longdes", longdes);   //add in variables that the PHP script needs
-                poi.put("sizet", markers.size());
-                des.put("sizer", markers.size());
-                img.put("size", markers.size());
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    public void paintRoute(locations a,locations b){
+
+        LatLng first = new LatLng(a.getLat(),a.getLon());
+        LatLng second = new LatLng(b.getLat(),b.getLon());
+
+        map.addPolyline(new PolylineOptions().add(first, second)
+                .width(8).color(Color.RED));
+
+    }
+
+    private void createFile(ArrayList<locations> points) {
+
+        String fileName = start+".txt";
+        Log.i("filen ",fileName);
+
+        String begin = "S"+start;
+        String dest = "D"+end;
+        Log.i("filen ",begin);
+        Log.i("filen ",dest);
 
 
-                for (int i = 0; i < markers.size(); i++) {  //for every marker
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(fileName, Context.MODE_PRIVATE));
 
-                    pointof curr = markers.get(i);  //get reference to current marker
 
-                    Bitmap d = curr.getImg();
-                    ByteArrayOutputStream output = new ByteArrayOutputStream();
-                    d.compress(Bitmap.CompressFormat.JPEG, 100, output); //bm is the bitmap object
-                    byte[] bytes = output.toByteArray();                //decode to bytes
-                    String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);    //encode in base64
-                    img.put("image" + i, base64Image);   //send string
-                    poi.put("description" + i, curr.getDescription());
-                    des.put("description" + i, curr.getDescription());
-                    poi.put("lat" + i, curr.getLat());
-                    //String longitudeu = String.valueOf((double) curr.getLng());
-                    poi.put("lng" + i, curr.getLng());
+            outputStreamWriter.write(begin);
+            outputStreamWriter.write(dest);
+            outputStreamWriter.write("YELLOW");
+            outputStreamWriter.write(Integer.toString(points.size()));
+            for(int i=0;i<points.size();i++){
+                String line = "P"+points.get(i).getLat()+","+points.get(i).getLon();
+                Log.i("line ,",line);
 
-                }
-            } catch (JSONException e) {
-
+                outputStreamWriter.write(line);
             }
-            JSONObject json = JSONParser.SendHttpPost(URL_UPLOAD, params);
-            JSONObject sendloc = JSONParser.SendHttpPost(POI_UPLOAD, poi);
-            JSONObject senddes = JSONParser.SendHttpPost(DES_UPLOAD, des);   //sending of data using the JSONParser class
-            JSONObject sendp = JSONParser.SendHttpPost(IMG_UPLOAD, img);
-            Log.i("test", params.toString());
-            Log.i("testpoi", poi.toString());
-            Log.i("testdes", des.toString());  //Just test methods
-            Log.i("img", img.toString());
-            return null;
+
+            outputStreamWriter.close();
+            Log.i("close", "");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
     }
-
 
 }

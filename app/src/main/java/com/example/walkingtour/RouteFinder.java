@@ -73,19 +73,19 @@ public class RouteFinder extends Activity {
 
         Log.i("From", here.getFrom());
         Log.i("To", here.getTo());
-        ArrayList<pointof> points = here.getPoints();
+        ArrayList<locations> points = here.getPoints();
 
         for (int i = 0; i < here.getPoints().size(); i++) {
 
 
-            pointof curr = points.get(i);
+            locations curr = points.get(i);
 
-            LatLng Current = new LatLng(curr.getLat(), curr.getLng());
+            LatLng Current = new LatLng(curr.getLat(), curr.getLon());
 
             if (i != points.size() - 1) {
 
-                pointof next = points.get(i + 1);
-                LatLng nex = new LatLng(next.getLat(), next.getLng());
+                locations next = points.get(i + 1);
+                LatLng nex = new LatLng(next.getLat(), next.getLon());
 
 
                 map.addPolyline(new PolylineOptions().add(Current, nex)
@@ -118,7 +118,7 @@ public class RouteFinder extends Activity {
                 if (mLine.startsWith("D")) {
 
 
-                    ArrayList<pointof> these = new ArrayList<pointof>();
+                    ArrayList<locations> these = new ArrayList<locations>();
                     String end = mLine.substring(1);
                     Route route = new Route(start, end);
 
@@ -138,7 +138,7 @@ public class RouteFinder extends Activity {
                         String[] splits = coords.split(",");
                         double lat = Double.parseDouble(splits[0]);
                         double lon = Double.parseDouble(splits[1]);
-                        pointof place = new pointof(lat, lon);
+                        locations place = new locations(lat, lon);
                         these.add(place);
 
 
