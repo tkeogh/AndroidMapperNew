@@ -28,6 +28,7 @@ import android.location.*;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -249,11 +250,11 @@ public class map extends Activity implements LocationListener {
 
                                     if (item.getTitle().equals("Log Point")) {
 
-                                        location =locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                        locations point = new locations(location.getLatitude(),location.getLongitude());
+                                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                        locations point = new locations(location.getLatitude(), location.getLongitude());
                                         points.add(point);
-                                        if(points.size() > 1){
-                                            paintRoute(points.get(points.size()-2),point);
+                                        if (points.size() > 1) {
+                                            paintRoute(points.get(points.size() - 2), point);
                                         }
 
 
@@ -282,7 +283,6 @@ public class map extends Activity implements LocationListener {
 
 
     }
-
 
 
     /**
@@ -318,7 +318,9 @@ public class map extends Activity implements LocationListener {
                 .setNegativeButton("No", dialogClickListener).show();  //setting variables within the dialog
     }
 
-    /** All of these have to be implemented : / */
+    /**
+     * All of these have to be implemented : /
+     */
 
     @Override
     public void onLocationChanged(Location location) {
@@ -340,10 +342,10 @@ public class map extends Activity implements LocationListener {
 
     }
 
-    public void paintRoute(locations a,locations b){
+    public void paintRoute(locations a, locations b) {
 
-        LatLng first = new LatLng(a.getLat(),a.getLon());
-        LatLng second = new LatLng(b.getLat(),b.getLon());
+        LatLng first = new LatLng(a.getLat(), a.getLon());
+        LatLng second = new LatLng(b.getLat(), b.getLon());
 
         map.addPolyline(new PolylineOptions().add(first, second)
                 .width(8).color(Color.RED));
@@ -352,34 +354,48 @@ public class map extends Activity implements LocationListener {
 
     private void createFile(ArrayList<locations> points) {
 
-        String fileName = start+".txt";
-        Log.i("filen ",fileName);
+        String fileName = start + ".txt";
+        Log.i("filen ", fileName);
 
-        String begin = "S"+start;
-        String dest = "D"+end;
-        Log.i("filen ",begin);
-        Log.i("filen ",dest);
+        String begin = "S" + start+"\n";
+        String dest = "D" + end+"\n";
+        Log.i("filen ", begin);
+        Log.i("filen ", dest);
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/saved_routes");
+        if(myDir.exists()){
+
+        }
+        else{
+            myDir.mkdirs();
+        }
+        File file = new File (myDir, fileName);
+        Log.i("dir",myDir.toString());
+
 
 
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(fileName, Context.MODE_PRIVATE));
+            FileOutputStream outputStream = new FileOutputStream(file);
 
 
-            outputStreamWriter.write(begin);
-            outputStreamWriter.write(dest);
-            outputStreamWriter.write("YELLOW");
-            outputStreamWriter.write(Integer.toString(points.size()));
+            outputStream.write(begin.getBytes());
+            outputStream.write(dest.getBytes());
+            outputStream.write("YELLOW".getBytes());
+            outputStream.write("\n".getBytes());
+            outputStream.write(Integer.toString(points.size()).getBytes());
+            outputStream.write("\n".getBytes());
             for(int i=0;i<points.size();i++){
-                String line = "P"+points.get(i).getLat()+","+points.get(i).getLon();
+                String line = "P"+points.get(i).getLat()+","+points.get(i).getLon()+"\n";
                 Log.i("line ,",line);
 
-                outputStreamWriter.write(line);
+                outputStream.write(line.getBytes());
             }
 
-            outputStreamWriter.close();
+            outputStream.close();
             Log.i("close", "");
         } catch (Exception e) {
             e.printStackTrace();
+            Log.i("error","");
         }
 
 
