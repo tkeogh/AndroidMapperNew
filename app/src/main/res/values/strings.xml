@@ -38,5 +38,6 @@
     <string name="title_activity_route_finder">RouteFinder</string>
     <string name="title_activity_route_choice">route_choice</string>
     <string name="title_activity_route_choosing">"Choose your route. "</string>
+    <string name="title_activity_route_type">routeType</string>
 
 </resources>

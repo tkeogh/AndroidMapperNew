@@ -1,19 +1,9 @@
 package com.example.walkingtour;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.*;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -21,22 +11,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.*;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
+import com.example.walkingtour.Data.Distance;
+import com.example.walkingtour.Data.locations;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,6 +42,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class map extends Activity implements LocationListener {
+    Double totalDist = 0.0;
+    Distance d = new Distance();
 
     private ArrayList<locations> info = new ArrayList<locations>();
 
@@ -64,11 +53,6 @@ public class map extends Activity implements LocationListener {
 
     private final static int POI_CHANGE = 1; //constant used for returning from other activity.
 
-
-    private static final String URL_UPLOAD = "http://users.aber.ac.uk/elk10/group3/create_tour.php";
-    private static final String POI_UPLOAD = "http://users.aber.ac.uk/elk10/group3/location.php";
-    private static final String DES_UPLOAD = "http://users.aber.ac.uk/elk10/group3/description.php"; //constant strings used for uploads.
-    private static final String IMG_UPLOAD = "http://users.aber.ac.uk/jmj12/groupproject/photo.php";
 
     private Location location; //current user location
     private GoogleMap map; //map to use
@@ -228,6 +212,8 @@ public class map extends Activity implements LocationListener {
 
         if (desire.equals("routing")) {
 
+
+
             opt.setVisibility(View.VISIBLE);
             see.setVisibility(View.GONE);
 
@@ -254,7 +240,12 @@ public class map extends Activity implements LocationListener {
                                         locations point = new locations(location.getLatitude(), location.getLongitude());
                                         points.add(point);
                                         if (points.size() > 1) {
-                                            paintRoute(points.get(points.size() - 2), point);
+                                            locations lastPoint = points.get(points.size()-2);
+                                            paintRoute(lastPoint, point);
+                                            totalDist = totalDist + d.distanceTo(lastPoint.getLat(),lastPoint.getLon(),
+                                                    point.getLat(),point.getLon());
+                                            Log.i("distance",Double.toString(totalDist));
+
                                         }
 
 
@@ -295,7 +286,7 @@ public class map extends Activity implements LocationListener {
     /**
      * Shows a dialog that either clears your walk and map or does nothing.
      */
-    public void showDialog() {
+    private void showDialog() {
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() { //new dialog
             @Override
@@ -303,7 +294,8 @@ public class map extends Activity implements LocationListener {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         map.clear();    //clear walk
-                        points.clear(); //clear data structure
+                        points.clear();//clear data structure
+                        totalDist = 0.0;
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -342,7 +334,7 @@ public class map extends Activity implements LocationListener {
 
     }
 
-    public void paintRoute(locations a, locations b) {
+    private void paintRoute(locations a, locations b) {
 
         LatLng first = new LatLng(a.getLat(), a.getLon());
         LatLng second = new LatLng(b.getLat(), b.getLon());

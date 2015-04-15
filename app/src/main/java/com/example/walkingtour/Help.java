@@ -1,16 +1,16 @@
 package com.example.walkingtour;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.example.walkingtour.Data.Distance;
+import com.example.walkingtour.Data.locations;
 
 public class Help extends Activity {
 
@@ -19,6 +19,8 @@ public class Help extends Activity {
 	ArrayList<locations> distances = new ArrayList<locations>();
 	
 	String help;
+
+    Distance d = new Distance();
 
 
 	private Location location;
@@ -38,13 +40,13 @@ public class Help extends Activity {
 		double lon = location.getLongitude();
 
 
-        locations PS = new locations("Physical Sciences",distanceTo(lat, lon, 52.4159519,-4.0654581));
+        locations PS = new locations("Physical Sciences",d.distanceTo(lat, lon, 52.4159519,-4.0654581));
 		distances.add(PS);
 
-        locations HO = new locations("Hugh Owen",distanceTo(lat, lon, 52.4157893,-4.063691));
+        locations HO = new locations("Hugh Owen",d.distanceTo(lat, lon, 52.4157893,-4.063691));
 		distances.add(HO);
 
-        locations TP = new locations("Thomas Parry",distanceTo(lat, lon, 52.4096535,-4.0521135));
+        locations TP = new locations("Thomas Parry",d.distanceTo(lat, lon, 52.4096535,-4.0521135));
 		distances.add(TP);
 
         locations shortest = sortDist(distances);

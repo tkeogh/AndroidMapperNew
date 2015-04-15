@@ -14,12 +14,13 @@ import android.widget.Toast;
 public class Grid extends Activity {
 
 	
-	Button help,finder,routing,facilities;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.grid);
+        Button help,finder,routing,facilities;
 
 		facilities = (Button) findViewById(R.id.facil);
 
@@ -69,7 +70,7 @@ public class Grid extends Activity {
 					@Override
 					public void onClick(View aView) {
 						Intent toAnotherActivity = new Intent(aView.getContext(),
-								RouteFinder.class);
+								routeType.class);
 						startActivity(toAnotherActivity); // move to another activity
 
 					}

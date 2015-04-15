@@ -3,10 +3,12 @@ package com.example.walkingtour;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.example.walkingtour.Data.Node;
+import com.example.walkingtour.Data.Route;
+import com.example.walkingtour.Data.locations;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -15,12 +17,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -31,6 +30,7 @@ public class RouteFinder extends Activity {
     String start;
     String end;
     boolean routeFound;
+    String type;
 
 
     @Override
@@ -47,6 +47,8 @@ public class RouteFinder extends Activity {
         LatLng aber = new LatLng(52.4140, -4.0810); // aberystwyth co ordinates
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(aber, 13));
         map.setMyLocationEnabled(true);
+        Intent intent = getIntent();
+        type = intent.getStringExtra("type");
 
         choice.setOnClickListener(
 
@@ -57,8 +59,9 @@ public class RouteFinder extends Activity {
                     @Override
                     public void onClick(View aView) {
 
-                        Intent movepoi = new Intent(aView.getContext(), route_choosing.class);
-                        startActivityForResult(movepoi, 1); //1 here is the request code used in onresult
+                        Intent getchoice = new Intent(aView.getContext(), route_choosing.class);
+                        getchoice.putExtra("type",type);
+                        startActivityForResult(getchoice, 1); //1 here is the request code used in onresult
 
                     }
                 }
@@ -104,7 +107,7 @@ public class RouteFinder extends Activity {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open(fileName)));
+                    new InputStreamReader(getAssets().open(type+"/"+fileName)));
             String mLine = reader.readLine();
             while (mLine != null) {
 
@@ -151,12 +154,14 @@ public class RouteFinder extends Activity {
                 mLine = reader.readLine(); //get next line
             }
         } catch (IOException e) {
-            //log the exception
+            Toast toast5 = Toast.makeText(getApplicationContext(), "Could Not Find File", Toast.LENGTH_SHORT);
+            toast5.show();
         }
         try {
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Toast toast5 = Toast.makeText(getApplicationContext(), "Could Not Find File", Toast.LENGTH_SHORT);
+            toast5.show();
         }
 
         return direct;
@@ -258,7 +263,7 @@ public class RouteFinder extends Activity {
                     //visited.add(endings.get(i));
                     for (int j = 0; j < possRoutes.size(); j++) {
                         Route curr = possRoutes.get(j);
-
+                        //Stops weird errors with analysis the same route a lot. Shouldnt be needed, scared to take out.
                         if (processed.contains(curr)) {
 
                         } else {
@@ -320,9 +325,9 @@ public class RouteFinder extends Activity {
         Collections.reverse(nodes);
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < nodes.size(); j++) {
-                if (search.equalsIgnoreCase(nodes.get(j).name)) {
-                    plotRoute(nodes.get(j).name, nodes.get(j).from);
-                    search = nodes.get(j).from;
+                if (search.equalsIgnoreCase(nodes.get(j).getName())) {
+                    plotRoute(nodes.get(j).getName(), nodes.get(j).getFrom());
+                    search = nodes.get(j).getFrom();
                 }
 
             }

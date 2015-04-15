@@ -19,7 +19,7 @@ import android.widget.TextView;
  */
 public class MainActivity extends Activity {
 	
-	 LinearLayout mLinearLayout;
+
 /**
  * 
  * Sets button and text on page for view, simple entry screen.

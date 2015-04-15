@@ -17,15 +17,19 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.walkingtour.Data.ExpandableListAdapter;
+
 public class route_choosing extends Activity {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
+    String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         final Intent choices = new Intent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_choosing);
@@ -36,6 +40,9 @@ public class route_choosing extends Activity {
         Button back = (Button)findViewById(R.id.back2);
        final  TextView start = (TextView)findViewById(R.id.start);
         final TextView end = (TextView)findViewById(R.id.end);
+        Intent intent = getIntent();
+        type = intent.getStringExtra("type");
+
 
 
         // preparing list data
@@ -159,7 +166,7 @@ public class route_choosing extends Activity {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open("Places")));
+                    new InputStreamReader(getAssets().open(type+"/Places")));
             String mLine = reader.readLine();
             while (mLine != null) {
                 places.add(mLine);

@@ -5,12 +5,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import com.example.walkingtour.Data.ExpandableListAdapter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -174,7 +175,7 @@ public class Secondscreen extends Activity {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open("Places")));
+                    new InputStreamReader(getAssets().open("standard/Places")));
             String mLine = reader.readLine();
             while (mLine != null) {
                 places.add(mLine);
