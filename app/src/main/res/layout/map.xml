@@ -35,4 +35,24 @@
         android:text="@string/choice"
         style="@style/button_seagull" />
 
+    <NumberPicker
+        android:id="@+id/number_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+        android:layout_alignParentRight="true"
+         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Steps"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/cancel"
+        android:layout_toLeftOf="@+id/number_picker"
+        android:layout_toStartOf="@+id/number_picker"
+        android:textColorLink="#ff2217bf" />
+
 </RelativeLayout>

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.PopupMenu;
 
 import com.example.walkingtour.Data.Distance;
@@ -75,6 +76,7 @@ public class map extends Activity implements LocationListener {
 
         final Button opt = (Button) findViewById(R.id.cancel);
         final Button see = (Button) findViewById(R.id.see);
+        NumberPicker np = (NumberPicker) findViewById(R.id.number_picker);
 
 
         map = ((MapFragment) getFragmentManager()
@@ -98,6 +100,7 @@ public class map extends Activity implements LocationListener {
             locations l = new locations();
             opt.setVisibility(View.GONE);
             see.setVisibility(View.VISIBLE);
+            np.setVisibility(View.GONE);
 
             info = l.populate();
 
@@ -121,82 +124,20 @@ public class map extends Activity implements LocationListener {
 
                                     if (item.getTitle().equals("Lecture Buildings")) {
                                         map.clear();
-                                        int size = info.size();
-
-                                        for (int i = 0; i < size; i++) {
-
-                                            locations a = info.get(i);
-
-                                            if (a.getType().equals("Lecture")) {
-
-                                                LatLng pos = new LatLng(a.getLat(), a.getLon());
-
-                                                Marker j = map.addMarker(new MarkerOptions()
-                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.lecture))
-                                                        .anchor(0.0f, 1.0f)
-                                                        .position(pos)    //add a marker to map using passed in data
-                                                        .title(a.getName())
-                                                        .snippet(a.getDes()));
-
-                                            }
-
-                                        }
+                                        showByType("lecture");
 
 
                                     }
 
                                     if (item.getTitle().equals("Facilities")) {
                                         map.clear();
-                                        int size = info.size();
-
-                                        for (int i = 0; i < size; i++) {
-
-                                            locations a = info.get(i);
-
-                                            if (a.getType().equals("Facilities")) {
-
-                                                LatLng pos = new LatLng(a.getLat(), a.getLon());
-
-                                                Marker j = map.addMarker(new MarkerOptions()
-                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.facil))
-                                                        .anchor(0.0f, 1.0f)
-                                                        .position(pos)    //add a marker to map using passed in data
-                                                        .title(a.getName())
-                                                        .snippet(a.getDes()));
-
-                                            }
-
-                                        }
+                                        showByType("facilities");
 
 
                                     }
                                     if (item.getTitle().equals("Accomodation")) {
                                         map.clear();
-                                        int size = info.size();
-
-                                        for (int i = 0; i < size; i++) {
-
-                                            locations a = info.get(i);
-
-                                            if (a.getType().equals("Accomodation")) {
-
-                                                LatLng pos = new LatLng(a.getLat(), a.getLon());
-
-                                                Marker j = map.addMarker(new MarkerOptions()
-                                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.house))
-                                                                .anchor(0.0f, 1.0f)
-                                                                .position(pos)    //add a marker to map using passed in data
-                                                                .title(a.getName())
-                                                                .snippet(a.getDes())
-
-                                                );
-
-
-                                            }
-
-                                        }
-
-
+                                        showByType("accomodation");
                                     }
 
                                     return true;
@@ -215,7 +156,25 @@ public class map extends Activity implements LocationListener {
 
 
             opt.setVisibility(View.VISIBLE);
+            np.setVisibility(View.VISIBLE);
             see.setVisibility(View.GONE);
+
+            np.setMinValue(1);// restricted number to minimum value i.e 1
+            np.setMaxValue(50);
+
+            np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
+            {
+
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal)
+                {
+
+                    // TODO Auto-generated method stub
+
+                   Log.i("value is",Integer.toString(newVal));
+
+                }
+            });
 
             opt.setOnClickListener(
 
@@ -345,7 +304,6 @@ public class map extends Activity implements LocationListener {
     }
 
     private void createFile(ArrayList<locations> points) {
-
         String fileName = start + ".txt";
         Log.i("filen ", fileName);
 
@@ -390,6 +348,36 @@ public class map extends Activity implements LocationListener {
             Log.i("error","");
         }
 
+
+    }
+
+    public void showByType(String type){
+
+        int size = info.size();
+
+        for (int i = 0; i < size; i++) {
+
+            locations a = info.get(i);
+
+            if (a.getType().equals(type)) {
+
+                LatLng pos = new LatLng(a.getLat(), a.getLon());
+                String resource ="R.drawable."+type;
+
+
+                Marker j = map.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.accomodation))
+                                .anchor(0.0f, 1.0f)
+                                .position(pos)    //add a marker to map using passed in data
+                                .title(a.getName())
+                                .snippet(a.getDes())
+
+                );
+
+
+            }
+
+        }
 
     }
 

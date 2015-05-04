@@ -33,7 +33,7 @@ public class Route {
 		points = new ArrayList<locations>();
 	}
 	
-	private void add(locations p){
+	public void add(locations p){
 		
 		points.add(p);
 	}

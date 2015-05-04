@@ -32,6 +32,10 @@ public class RouteFinder extends Activity {
     boolean routeFound;
     String type;
 
+    public RouteFinder() {
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,7 @@ public class RouteFinder extends Activity {
                     public void onClick(View aView) {
 
                         Intent getchoice = new Intent(aView.getContext(), route_choosing.class);
-                        getchoice.putExtra("type",type);
+                        getchoice.putExtra("type", type);
                         startActivityForResult(getchoice, 1); //1 here is the request code used in onresult
 
                     }
@@ -100,14 +104,14 @@ public class RouteFinder extends Activity {
 
     }
 
-    private ArrayList<Route> reading(String fileName) {
+    public ArrayList<Route> reading(String fileName) {
         ArrayList<Route> direct = new ArrayList<Route>();
-        Log.i("Opening this file : ", fileName);
+        //Log.i("Opening this file : ", fileName);
         String start = null;
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open(type+"/"+fileName)));
+                    new InputStreamReader(getAssets().open(type + "/" + fileName)));
             String mLine = reader.readLine();
             while (mLine != null) {
 
@@ -154,14 +158,14 @@ public class RouteFinder extends Activity {
                 mLine = reader.readLine(); //get next line
             }
         } catch (IOException e) {
-            Toast toast5 = Toast.makeText(getApplicationContext(), "Could Not Find File", Toast.LENGTH_SHORT);
-            toast5.show();
+            // Toast toast5 = Toast.makeText(getApplicationContext(), "Could Not Find File", Toast.LENGTH_SHORT);
+            //toast5.show();
         }
         try {
             reader.close();
         } catch (IOException e) {
-            Toast toast5 = Toast.makeText(getApplicationContext(), "Could Not Find File", Toast.LENGTH_SHORT);
-            toast5.show();
+            // Toast toast5 = Toast.makeText(getApplicationContext(), "Could Not Find File", Toast.LENGTH_SHORT);
+            // toast5.show();
         }
 
         return direct;
@@ -192,7 +196,7 @@ public class RouteFinder extends Activity {
 
                 }
             }
-            if (resultCode == RESULT_CANCELED ){//Equates to 0
+            if (resultCode == RESULT_CANCELED) {//Equates to 0
                 //Stops the app crashing if the user just wants to go back a screen.
 
             }
@@ -205,7 +209,7 @@ public class RouteFinder extends Activity {
         ArrayList<String> endings = new ArrayList<String>();
 
         int tripped = 0; //Keep track of if the routes found
-        ArrayList<Route> reading = reading(from + ".txt"); //Reads in routes from a text file, all follow naming convention
+        ArrayList<Route> reading = reading(here + ".txt"); //Reads in routes from a text file, all follow naming convention
 
         for (int i = 0; i < reading.size(); i++) {
             String destination = reading.get(i).getTo();
@@ -221,14 +225,15 @@ public class RouteFinder extends Activity {
 
         if (tripped == 0) {
 
-            findPath(endings);//Route isnt in the first file, find a path.
+            ArrayList<Node> nodes = findPath(endings);//Route isnt in the first file, find a path.
+            plotPath(nodes);
 
 
         }
     }
 
 
-    public void findPath(ArrayList<String> endings) {
+    public ArrayList<Node> findPath(ArrayList<String> endings) {
         boolean missingroute = true;
 
         Log.i("going from", start);
@@ -287,34 +292,27 @@ public class RouteFinder extends Activity {
                             Log.i("found route", curr.getFrom() + " " + curr.getTo());
 
                             missingroute = false;
-                            plotPath(fileInfo);
 
-                            return;
+
+                            return fileInfo;
 
 
                         }
-                        if (!missingroute) {
-                            return;
-                        }
+
                     }
-                    if (!missingroute) {
-                        return;
-                    }
-                }
-                if (!missingroute) {
-                    return;
+
                 }
 
 
             }
             endings = nextfiles;
-            if (!missingroute) {
-                return;
-            }
+
         }
 
-
+        return fileInfo;
     }
+
+
 
     public void plotPath(ArrayList<Node> nodes) {
 
