@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 
- * Simple second screen for text entry of basic walk information
+ * Simple second screen for entering data on the planned route
  * @author ww3ref
  *
  */
@@ -78,8 +78,9 @@ public class Secondscreen extends Activity {
 
 
                      to = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+                //getting the to frmo the list
                     String[] split = to.split(" ");
-                    to = split[0];
+                    to = split[0];// so we only get wnated file
                 Log.i("Added thi nas to: ", to);
 
 
@@ -124,7 +125,7 @@ public class Secondscreen extends Activity {
 	
 	/**
 	 *
-	 * Checks the three edit texts are not null
+	 * Checks theedit texts are not null
 	 * @return boolean based on if passed or failed
 	 */
 	public boolean checknotnull(){
@@ -141,6 +142,9 @@ public class Secondscreen extends Activity {
 	}
 
 
+    /**
+     * prepares the list views like other activities
+     */
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();

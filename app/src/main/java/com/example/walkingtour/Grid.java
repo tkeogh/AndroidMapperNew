@@ -30,6 +30,9 @@ public class Grid extends Activity {
 		
 		finder = (Button) findViewById(R.id.find);
 
+		/**
+		 * setting text using HTML, gives better design
+		 */
         facilities.setText(Html.fromHtml("<b><big>" + "Facilities" + "</big></b>" + "<br /><br />" +
                 "<small>" + "Map of Buildings on Campus" + "</small>" + "<br />"));
 

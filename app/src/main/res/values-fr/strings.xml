@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">french</string>
+    <string name="action_settings">french</string>
+    <string name="hello_world">french</string>
+    <string name="walk_tour">french</string>
+    <string name="swap1">french</string>
+    <string name="title_activity_secondscreen">french</string>
+    <string name="map_title">french</string>
+    <string name="walk2">french</string>
+    <string name="swap2">french</string>
+    <string name="gomap">french</string>
+    <string name="entertext">french.</string>
+    <string name="enterwalk">frencht</string>
+    <string name="enterdesc">french</string>
+    <string name="enterldesc">french.</string>
+    <string name="intro"> french</string>
+    <string name="poi"> french</string>
+    <string name="cancelw"> french</string>
+    <string name="options"> french</string>
+    <string name="choice">Vfrench</string>
+    <string name="enterpoi">french.</string>
+    <string name="poidesc">french</string>
+    <string name="addp">french</string>
+    <string name="take">french.</string>
+    <string name="up"> french</string>
+    <string name="directions">frenchs</string>
+    <string name="from">Ffrench</string>
+    <string name="to">french</string>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <string name="grid">french</string>
+    <string name="title_activity_grid">french</string>
+    <string name="title_activity_help">french</string>
+    <string name="title_activity_route_finder">french</string>
+    <string name="title_activity_route_choice">french</string>
+    <string name="title_activity_route_choosing">french</string>
+    <string name="title_activity_route_type">french</string>
+
+
+
+</resources>

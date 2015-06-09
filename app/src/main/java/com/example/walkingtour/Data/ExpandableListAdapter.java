@@ -15,6 +15,7 @@ import com.example.walkingtour.R;
 
 /**
  *Taken from - http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
+ * implements a lot of unused functions but could be useful in future.
  *
  *
  */

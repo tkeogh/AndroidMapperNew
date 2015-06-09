@@ -40,6 +40,7 @@ public class Help extends Activity {
 		double lon = location.getLongitude();
 
 
+		//manual add locations, we only have 3 so may as well
         locations PS = new locations("Physical Sciences",d.distanceTo(lat, lon, 52.4159519,-4.0654581));
 		distances.add(PS);
 
@@ -50,7 +51,8 @@ public class Help extends Activity {
 		distances.add(TP);
 
         locations shortest = sortDist(distances);
-		
+
+		//display information based on the shortests name
 		if (shortest.getName().equals("Physical Sciences")){
 			
 			
@@ -83,6 +85,11 @@ public class Help extends Activity {
 
 	}
 
+	/**Takes a set of locations and returns the index of the closest to the user
+	 *
+	 * @param newdist takes all the current locations
+	 * @return index of shortest distance
+	 */
 	private locations sortDist(ArrayList<locations> newdist) {
 		int index = 0;
 
@@ -92,7 +99,7 @@ public class Help extends Activity {
 			
 			if(newdist.get(i).getDist() < small.getDist()){
 				
-				index = i;
+				index = i;//log shortests index, no sort needed
 			}
 			
 			

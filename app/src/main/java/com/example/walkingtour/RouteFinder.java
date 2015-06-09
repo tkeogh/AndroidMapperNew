@@ -75,6 +75,12 @@ public class RouteFinder extends Activity {
     }
 
 
+    /**
+     * Takes a rotue object and paints the path dictated by it
+     *
+     * @param here the route to be set
+     * @param map map object
+     */
     public void setRoute(Route here, GoogleMap map) {
 
 
@@ -89,14 +95,14 @@ public class RouteFinder extends Activity {
 
             LatLng Current = new LatLng(curr.getLat(), curr.getLon());
 
-            if (i != points.size() - 1) {
+            if (i != points.size() - 1) {// if not last point
 
-                locations next = points.get(i + 1);
+                locations next = points.get(i + 1);//get next location
                 LatLng nex = new LatLng(next.getLat(), next.getLon());
 
 
                 map.addPolyline(new PolylineOptions().add(Current, nex)
-                        .width(8).color(Color.parseColor(here.getDifficulty())));
+                        .width(8).color(Color.parseColor(here.getDifficulty())));//paint the line
 
             }
 
@@ -104,6 +110,11 @@ public class RouteFinder extends Activity {
 
     }
 
+    /**
+     * read in the routes from a file
+     * @param fileName the file name of the represented node
+     * @return return the routes held in the file
+     */
     public ArrayList<Route> reading(String fileName) {
         ArrayList<Route> direct = new ArrayList<Route>();
         //Log.i("Opening this file : ", fileName);
@@ -111,22 +122,22 @@ public class RouteFinder extends Activity {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open(type + "/" + fileName)));
+                    new InputStreamReader(getAssets().open(type + "/" + fileName)));//open frm right folder
             String mLine = reader.readLine();
             while (mLine != null) {
 
 
-                if (mLine.startsWith("S")) {
+                if (mLine.startsWith("S")) {//if start
                     start = mLine.substring(1);
 
 
                 }
 
-                if (mLine.startsWith("D")) {
+                if (mLine.startsWith("D")) {//if a destination
 
 
                     ArrayList<locations> these = new ArrayList<locations>();
-                    String end = mLine.substring(1);
+                    String end = mLine.substring(1);//remove first letter "D"
                     Route route = new Route(start, end);
 
                     //Log.i("destination : ",end);
@@ -134,9 +145,10 @@ public class RouteFinder extends Activity {
                     route.setDifficulty(rating);
 
 
-                    int amount = Integer.parseInt(reader.readLine());
+                    int amount = Integer.parseInt(reader.readLine());//amount of nodes
 
 
+                    //load in files co ordinates along the route
                     for (int i = 0; i < amount; i++) {
 
                         String coords = reader.readLine();
@@ -151,7 +163,7 @@ public class RouteFinder extends Activity {
 
                     }
                     route.setPoints(these);
-                    direct.add(route);
+                    direct.add(route);//add the finished route
                 }
 
 
@@ -172,6 +184,12 @@ public class RouteFinder extends Activity {
     }
 
 
+    /**Handles the starting of route finding based on user request
+     *
+     * @param requestCode what went out as a request
+     * @param resultCode how did the process finish
+     * @param data the data returned
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         Log.i("requiest code is " + Integer.toString(requestCode), " result is " + resultCode);
@@ -186,7 +204,7 @@ public class RouteFinder extends Activity {
                     Bundle extras = data.getExtras();
                     start = extras.getString("from");
                     end = extras.getString("to");
-                    if (start.equalsIgnoreCase(end)) {
+                    if (start.equalsIgnoreCase(end)) {//error check
                         Toast toast4 = Toast.makeText(getApplicationContext(), "Your destination and start are the same", Toast.LENGTH_SHORT);
                         toast4.show();
                         return;
@@ -202,6 +220,12 @@ public class RouteFinder extends Activity {
             }
         }
     }
+
+    /** handles finding connceting start end, if not deaults into the BFS
+     *
+     * @param from START location
+     * @param to end location
+     */
 
     public void plotRoute(String from, String to) {
         String here = from;
@@ -226,13 +250,18 @@ public class RouteFinder extends Activity {
         if (tripped == 0) {
 
             ArrayList<Node> nodes = findPath(endings);//Route isnt in the first file, find a path.
-            plotPath(nodes);
+            plotPath(nodes); //plot that path
 
 
         }
     }
 
 
+    /**
+     * BFS for finding the route
+     * @param endings the starting nodes connecting ndoes
+     * @return the path as an array of nodes
+     */
     public ArrayList<Node> findPath(ArrayList<String> endings) {
         boolean missingroute = true;
 
@@ -294,7 +323,7 @@ public class RouteFinder extends Activity {
                             missingroute = false;
 
 
-                            return fileInfo;
+                            return fileInfo;//return the final analysed nodes
 
 
                         }
@@ -305,7 +334,7 @@ public class RouteFinder extends Activity {
 
 
             }
-            endings = nextfiles;
+            endings = nextfiles;//new set of ndoes to analyse
 
         }
 
@@ -313,24 +342,28 @@ public class RouteFinder extends Activity {
     }
 
 
-
+    /** takes the nodes and plots a path by searching backwards
+     *
+     * @param nodes the analysed nodes in the graph
+     */
     public void plotPath(ArrayList<Node> nodes) {
 
         Log.i("hit plot path", "sfd");
         int counter = 0;
         String search = end;
 
-        Collections.reverse(nodes);
+        Collections.reverse(nodes); //so we can start at the end easily
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < nodes.size(); j++) {
                 if (search.equalsIgnoreCase(nodes.get(j).getName())) {
-                    plotRoute(nodes.get(j).getName(), nodes.get(j).getFrom());
-                    search = nodes.get(j).getFrom();
+                    plotRoute(nodes.get(j).getFrom(), nodes.get(j).getName());//makes it right colour
+                    search = nodes.get(j).getFrom();//now searching the node which opened the current
                 }
 
             }
 
         }
+        //plot from start to the last analysed
         plotRoute(start, search);
     }
 

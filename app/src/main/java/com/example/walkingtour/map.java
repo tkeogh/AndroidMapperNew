@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class map extends Activity implements LocationListener {
+    //log total distances and instantiate distance functions
     Double totalDist = 0.0;
     Distance d = new Distance();
 
@@ -61,12 +62,12 @@ public class map extends Activity implements LocationListener {
     String start;
     String end; //variables from previous screen
 
-    String desire;
+    String desire;//what the user wants to do
 
-    ArrayList<locations> points = new ArrayList<locations>(); //array list for all POI
+    ArrayList<locations> points = new ArrayList<locations>(); //array list for all locations
 
     /**
-     * Sets map and gets current user location. Then sets the methods for the buttons.
+     * Sets map and gets current user location. Then sets the methods for the buttons, handles on clicks.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,9 @@ public class map extends Activity implements LocationListener {
 
 
         final Button opt = (Button) findViewById(R.id.cancel);
-        final Button see = (Button) findViewById(R.id.see);
-        NumberPicker np = (NumberPicker) findViewById(R.id.number_picker);
+        final Button see = (Button) findViewById(R.id.see);//setting of buttons and number pickers
+        final NumberPicker np = (NumberPicker) findViewById(R.id.number_picker);
+
 
 
         map = ((MapFragment) getFragmentManager()
@@ -96,13 +98,13 @@ public class map extends Activity implements LocationListener {
         desire = intent.getStringExtra("want");
 
         if (desire.equals("help")) {
-            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);//sett type of map
             locations l = new locations();
             opt.setVisibility(View.GONE);
-            see.setVisibility(View.VISIBLE);
+            see.setVisibility(View.VISIBLE);//handling what should be shown on this screen
             np.setVisibility(View.GONE);
 
-            info = l.populate();
+            info = l.populate();//get the locations
 
 
             see.setOnClickListener(
@@ -159,7 +161,7 @@ public class map extends Activity implements LocationListener {
             np.setVisibility(View.VISIBLE);
             see.setVisibility(View.GONE);
 
-            np.setMinValue(1);// restricted number to minimum value i.e 1
+            np.setMinValue(0);// restricted number to minimum value i.e 0
             np.setMaxValue(50);
 
             np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
@@ -197,13 +199,15 @@ public class map extends Activity implements LocationListener {
 
                                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                                         locations point = new locations(location.getLatitude(), location.getLongitude());
-                                        points.add(point);
+                                        points.add(point);//log set points
+                                        //log total distance
                                         if (points.size() > 1) {
                                             locations lastPoint = points.get(points.size()-2);
                                             paintRoute(lastPoint, point);
                                             totalDist = totalDist + d.distanceTo(lastPoint.getLat(),lastPoint.getLon(),
-                                                    point.getLat(),point.getLon());
+                                                    point.getLat(),point.getLon());//old + new
                                             Log.i("distance",Double.toString(totalDist));
+
 
                                         }
 
@@ -211,11 +215,14 @@ public class map extends Activity implements LocationListener {
                                     }
 
                                     if (item.getTitle().equals("Cancel")) {
-                                        showDialog();
+                                        showDialog();//handels cancelling
                                     }
                                     if (item.getTitle().equals("Create Route")) {
+                                        int x = np.getValue();
+                                        String grade = calcGrade(x,totalDist);//get the grade
+                                        //simple but works
 
-                                        createFile(points);
+                                        createFile(points,grade);
 
 
                                     }
@@ -234,9 +241,38 @@ public class map extends Activity implements LocationListener {
 
     }
 
+    /**Takes two route variables and calculates the grading of the route.
+     *
+     * @param steps steps in the route from number picker
+     * @param total total distance
+     * @return string of the grade
+     */
+    private String calcGrade(int steps, Double total) {
+        int grade = 0;
+        if(steps > 0){
+            grade++;
+        }
+        if(total > 0.3){
+            grade++;
+        }
+        if(steps > 20){
+            grade = 2;
+        }
+        if(grade == 0){
+            return "GREEN";
+        }
+        if(grade == 1){
+            return "YELLOW";
+        }
+        if(grade > 1){
+            return "RED";
+        }
+        return "RED";
+    }
+
 
     /**
-     * On the return to screen from adding a poi runs the code inside the method. Adds poi to map and data storage.
+     * nothing for now
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -270,7 +306,7 @@ public class map extends Activity implements LocationListener {
     }
 
     /**
-     * All of these have to be implemented : /
+     * All of these are unused
      */
 
     @Override
@@ -293,26 +329,39 @@ public class map extends Activity implements LocationListener {
 
     }
 
+    /**takes two locations and paints a polyline between them
+     *
+     * @param a first location
+     * @param b second location
+     */
     private void paintRoute(locations a, locations b) {
 
-        LatLng first = new LatLng(a.getLat(), a.getLon());
+        LatLng first = new LatLng(a.getLat(), a.getLon());//locations need to be LatLng objects
         LatLng second = new LatLng(b.getLat(), b.getLon());
 
         map.addPolyline(new PolylineOptions().add(first, second)
                 .width(8).color(Color.RED));
 
+
     }
 
-    private void createFile(ArrayList<locations> points) {
+    /**
+     *
+     * @param points all the points on the rotue
+     * @param colour colour the route should be, grading
+     */
+
+    private void createFile(ArrayList<locations> points, String colour) {
         String fileName = start + ".txt";
         Log.i("filen ", fileName);
-
+        // getting hold of file locations and important strings
         String begin = "S" + start+"\n";
         String dest = "D" + end+"\n";
         Log.i("filen ", begin);
         Log.i("filen ", dest);
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/saved_routes");
+        //check we havent made it before
         if(myDir.exists()){
 
         }
@@ -323,14 +372,16 @@ public class map extends Activity implements LocationListener {
         Log.i("dir",myDir.toString());
 
 
-
+        /**
+         * write or important information to the file
+         */
         try {
             FileOutputStream outputStream = new FileOutputStream(file);
 
 
             outputStream.write(begin.getBytes());
             outputStream.write(dest.getBytes());
-            outputStream.write("YELLOW".getBytes());
+            outputStream.write(colour.getBytes());
             outputStream.write("\n".getBytes());
             outputStream.write(Integer.toString(points.size()).getBytes());
             outputStream.write("\n".getBytes());
@@ -351,6 +402,11 @@ public class map extends Activity implements LocationListener {
 
     }
 
+    /**Takes a type of building and searches and displays based on the type
+     *
+     * @param type type of building we would like to show
+     */
+
     public void showByType(String type){
 
         int size = info.size();
@@ -362,17 +418,43 @@ public class map extends Activity implements LocationListener {
             if (a.getType().equals(type)) {
 
                 LatLng pos = new LatLng(a.getLat(), a.getLon());
-                String resource ="R.drawable."+type;
+
+    //having to use three ifs here, cant currently find a better way due to method taking
+                //a resource
+                if(type.equals("accomodation")){
+                    Marker j = map.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.accomodation))
+                                    .anchor(0.0f, 1.0f)
+                                    .position(pos)    //add a marker to map using passed in data
+                                    .title(a.getName())
+                                    .snippet(a.getDes())
+
+                    );
+                }
+                if(type.equals("facilities")){
+                    Marker j = map.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.facilities))
+                                    .anchor(0.0f, 1.0f)
+                                    .position(pos)    //add a marker to map using passed in data
+                                    .title(a.getName())
+                                    .snippet(a.getDes())
+
+                    );
+
+                }
+                if(type.equals("lecture")){
+                    Marker j = map.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.lecture))
+                                    .anchor(0.0f, 1.0f)
+                                    .position(pos)    //add a marker to map using passed in data
+                                    .title(a.getName())
+                                    .snippet(a.getDes())
+
+                    );
+
+                }
 
 
-                Marker j = map.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.accomodation))
-                                .anchor(0.0f, 1.0f)
-                                .position(pos)    //add a marker to map using passed in data
-                                .title(a.getName())
-                                .snippet(a.getDes())
-
-                );
 
 
             }

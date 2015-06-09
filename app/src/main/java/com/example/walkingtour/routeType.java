@@ -9,7 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-
+/**
+ * just handles the selection of a tpye of route
+ */
 public class routeType extends Activity {
 
     @Override

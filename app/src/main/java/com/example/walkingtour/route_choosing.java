@@ -73,7 +73,7 @@ public class route_choosing extends Activity {
 
                     String to = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
                     String[] split = to.split(" ");
-                    to = split[0];
+                    to = split[0];//only get the first word, all we need for file referencing
 
 
                         choices.putExtra("to",to);
@@ -136,17 +136,17 @@ public class route_choosing extends Activity {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
-        // Adding header titles
+        // Adding the two headers
         listDataHeader.add("From");
         listDataHeader.add("To");
 
 
-        // Adding child data from reading a file
+        // Adding child data from reading a file, can be easily changed
         List<String> locations = getData();
 
 
 
-        listDataChild.put(listDataHeader.get(0), locations); // Header, Child data
+        listDataChild.put(listDataHeader.get(0), locations); // matching up header with its child data
         listDataChild.put(listDataHeader.get(1), locations);
 
     }
@@ -166,7 +166,7 @@ public class route_choosing extends Activity {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open(type+"/Places")));
+                    new InputStreamReader(getAssets().open(type+"/Places")));//use type to make sure we get right folder
             String mLine = reader.readLine();
             while (mLine != null) {
                 places.add(mLine);
